@@ -15,7 +15,7 @@ using MySql.Data.MySqlClient;
 namespace DayRegions
 {
 
-    [ApiVersion(1, 15)]
+    [ApiVersion(1, 26)]
     public class DayRegions : TerrariaPlugin
     {
         public static IDbConnection db;
@@ -30,7 +30,7 @@ namespace DayRegions
         {
             if (TShock.Config.StorageType.ToLower() == "sqlite")
             {
-                string sql = Path.Combine(TShock.SavePath, "InanZen_DB.sqlite");
+                string sql = Path.Combine(TShock.SavePath, "DayRegions.sqlite");
                 db = new SqliteConnection(string.Format("uri=file://{0},Version=3", sql));
             }
             else if (TShock.Config.StorageType.ToLower() == "mysql")
@@ -50,7 +50,7 @@ namespace DayRegions
                 }
                 catch (MySqlException ex)
                 {
-                    Log.Error(ex.ToString());
+                    TShock.Log.Error(ex.ToString());
                     throw new Exception("MySql not setup correctly");
                 }
             }
@@ -166,7 +166,7 @@ namespace DayRegions
                 catch (Exception e)
                 {
                     Console.WriteLine(e.Message);
-                    Log.Warn(e.Message);
+                    TShock.Log.Warn(e.Message);
                 }
             }
         }
@@ -223,7 +223,7 @@ namespace DayRegions
                 new SqlColumn("ID", MySql.Data.MySqlClient.MySqlDbType.Int32) { Primary = true, AutoIncrement = true, NotNull = true },
                 new SqlColumn("Region", MySql.Data.MySqlClient.MySqlDbType.VarChar) { Unique = true, Length = 30 }
             );
-            SQLcreator.EnsureExists(table);
+            SQLcreator.EnsureTableStructure(table);
         }
         private static bool DayRegions_Add(string name)
         {
